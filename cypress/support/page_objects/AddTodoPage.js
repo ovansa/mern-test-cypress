@@ -1,15 +1,19 @@
 class AddTodoPage {
-    getDescriptionField(value) {
-        return cy.get(':nth-child(1) > .form-control').type(value);
+    getHeaderTitleField() {
+        return cy.get('h3');
     }
 
-    getResponsibleField(value) {
-        return cy.get(':nth-child(2) > .form-control').type(value);
+    getDescriptionField() {
+        return cy.get(':nth-child(1) > .form-control');
+    }
+
+    getResponsibleField() {
+        return cy.get(':nth-child(2) > .form-control');
     }
 
     getPriorityLevelField(priorityValue) {
         const priorityTag = '#priority'+ priorityValue
-        return cy.get(priorityTag).click();
+        return cy.get(priorityTag);
     }
 
     getCreateButton() {
