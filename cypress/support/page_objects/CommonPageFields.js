@@ -1,4 +1,4 @@
-class AddTodoPage {
+class CommonPageFields {
     getHeaderTitleField() {
         return cy.get('h3');
     }
@@ -21,9 +21,4 @@ class AddTodoPage {
     }
 }
 
-export default AddTodoPage;
-
-// cy.get(':nth-child(1) > .form-control').type('Down Up');
-//         cy.get(':nth-child(2) > .form-control').type('Person5');
-//         cy.get('#priorityMedium').click();
-//         cy.get('.btn').click();
+export default CommonPageFields;
