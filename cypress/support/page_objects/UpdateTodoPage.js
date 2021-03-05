@@ -3,8 +3,8 @@ class UpdateTodoPage {
         return cy.get('#completedCheckbox');
     }
 
-    getActionButton(name) {
-        return cy.get('.btn').contains(name);
+    getDeleteButton() {
+        return cy.get(':nth-child(7) > .btn');
     }
 }
 

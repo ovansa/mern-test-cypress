@@ -2,6 +2,9 @@
 import CommonPageFields from '../../support/page_objects/CommonPageFields'
 import UpdateTodoPage from '../../support/page_objects/UpdateTodoPage'
 
+const updateButton = 'Update Todo';
+const createButton = 'Create Todo';
+
 describe('UPDATE TODO SCENARIOS', function () {
     it('Scenario 1: The details of the todo selected by clicking edit button is prefilled in todo update page: \
     Verify that the prefilled Description, Responsible, and Priority is the same as that in the todo list table', function () {
@@ -17,14 +20,10 @@ describe('UPDATE TODO SCENARIOS', function () {
         var selectedResponsible = ''
         var selectedPriority = ''
 
-        cy.visit('http://localhost:3000')
-        cy.contains('Create Todo').click();
+        cy.navigateToAddTodoPage()
 
         // Create a todo
-        commonPageFields.getDescriptionField().type(randomDescriptionText);
-        commonPageFields.getResponsibleField().type(randomResponsibleText);
-        commonPageFields.getPriorityLevelField(randomPriority).click()
-        commonPageFields.getCreateButton().click()
+        cy.fillTodoFormAndSubmit(randomDescriptionText, randomResponsibleText, randomPriority, createButton);
 
         // Search for todo in Todo List table and click the edit link
 
@@ -69,8 +68,8 @@ describe('UPDATE TODO SCENARIOS', function () {
 
     it('Scenario 2: Todo can be completed i.e closed successfully: Validate that completed todo i.e. \
     Description, Responsible and Priority texts are crossed out in Todo List table', function () {
-        const commonPageFields = new CommonPageFields()
         const updateTodoPage = new UpdateTodoPage()
+        const commonPageFields = new CommonPageFields()
 
         // Generate random values to fill the Todo form
         const randomDescriptionText = "Description " + Math.random().toString(36).substring(2, 7)
@@ -78,14 +77,10 @@ describe('UPDATE TODO SCENARIOS', function () {
         const priorityTypes = ['Low', 'Medium', 'High'];
         const randomPriority = priorityTypes[Math.floor(Math.random() * priorityTypes.length)];
 
-        cy.visit('http://localhost:3000')
-        cy.contains('Create Todo').click();
+        cy.navigateToAddTodoPage()
 
         // Create a todo
-        commonPageFields.getDescriptionField().type(randomDescriptionText);
-        commonPageFields.getResponsibleField().type(randomResponsibleText);
-        commonPageFields.getPriorityLevelField(randomPriority).click()
-        commonPageFields.getCreateButton().click()
+        cy.fillTodoFormAndSubmit(randomDescriptionText, randomResponsibleText, randomPriority, createButton);
 
         // Search for todo in Todo List table and click the edit link
 
@@ -118,7 +113,7 @@ describe('UPDATE TODO SCENARIOS', function () {
         updateTodoPage.getCompletedCheckBox().check()
 
         // Click on update button
-        updateTodoPage.getActionButton('Update Todo').click()
+        commonPageFields.getActionButton(updateButton).click()
 
         // Search for todo in Todo List table and verify that the texts are crossed-out.
         cy.get('tr td:nth-child(1)').contains(randomDescriptionText).should('have.length', 1).then(
@@ -141,11 +136,9 @@ describe('UPDATE TODO SCENARIOS', function () {
         )
     })
 
-    
+
     it('Scenario 3: Todo can be updated successfully: Validate that Description, Responsible and Priority \
-    is the same as the updated values ', function () {
-        const commonPageFields = new CommonPageFields()
-        const updateTodoPage = new UpdateTodoPage()
+    is the same as the updated values', function () {
 
         // Generate random values to fill the Todo form
         const randomDescriptionText = "Description " + Math.random().toString(36).substring(2, 7)
@@ -156,14 +149,10 @@ describe('UPDATE TODO SCENARIOS', function () {
         const randomPriority = priorityTypes[Math.floor(Math.random() * priorityTypes.length)];
         const randomPriorityToUpdate = priorityTypes[Math.floor(Math.random() * priorityTypes.length)];
 
-        cy.visit('http://localhost:3000')
-        cy.contains('Create Todo').click();
+        cy.navigateToAddTodoPage()
 
         // Create a todo
-        commonPageFields.getDescriptionField().type(randomDescriptionText);
-        commonPageFields.getResponsibleField().type(randomResponsibleText);
-        commonPageFields.getPriorityLevelField(randomPriority).click()
-        commonPageFields.getCreateButton().click()
+        cy.fillTodoFormAndSubmit(randomDescriptionText, randomResponsibleText, randomPriority, createButton);
 
         // Search for todo and click to edit
 
@@ -172,43 +161,34 @@ describe('UPDATE TODO SCENARIOS', function () {
                 cy.get('tr td:nth-child(1)').each(($e1, index, $list) => {
                     const text = $e1.text()
                     if (text.includes(randomDescriptionText)) {
-
                         // Click the edit link of todo 
+
                         cy.get('tr td:nth-child(3)').eq(index).next().contains('Edit').click().then(
                             function () {
+                                // Update the Description, Responsible, Priority fields; and Update form        
+                                cy.clearForm()
+                                cy.fillTodoFormAndSubmit(randomDescriptionTextforUpdate, randomResponsibleTextforUpdate, 
+                                    randomPriorityToUpdate, updateButton).then(
+                                    function () {
+                                        cy.get('tr td:nth-child(1)').each(($e1, index, $list) => {
+                                            const text = $e1.text()
+                                            if (text.includes(randomDescriptionTextforUpdate)) {
 
-                                // Update the Description, Responsible, Priority fields; and Update form
-                                commonPageFields.getDescriptionField().clear()
-                                commonPageFields.getDescriptionField().type(randomDescriptionTextforUpdate)
-                                commonPageFields.getResponsibleField().clear()
-                                commonPageFields.getResponsibleField().type(randomResponsibleTextforUpdate)
-                                commonPageFields.getPriorityLevelField(randomPriorityToUpdate)
+                                                // Checks that Responsible field is the same as updated
+                                                cy.get('tr td:nth-child(1)').eq(index).next().then(function (value) {
+                                                    const responsible = value.text()
+                                                    expect(responsible).to.equal(randomResponsibleTextforUpdate)
+                                                })
 
-                                updateTodoPage.getActionButton('Update Todo').click().then(function () {
-
-                                    // Search for updated todo and verify that texts are updated
-                                    cy.get('tr td:nth-child(1)').contains(randomDescriptionTextforUpdate).should('have.length', 1).then(
-                                        function () {
-                                            cy.get('tr td:nth-child(1)').each(($e1, index, $list) => {
-                                                const text = $e1.text()
-                                                if (text.includes(randomDescriptionTextforUpdate)) {
-
-                                                    // Checks that Responsible field is the same as updated
-                                                    cy.get('tr td:nth-child(1)').eq(index).next().then(function (value) {
-                                                        const responsible = value.text()
-                                                        expect(responsible).to.equal(randomResponsibleTextforUpdate)
-                                                    })
-
-                                                    // Checks that Priority field is the same as updated
-                                                    cy.get('tr td:nth-child(2)').eq(index).next().then(function (value) {
-                                                        const priorityText = value.text()
-                                                        expect(priorityText).to.equal(randomPriorityToUpdate)
-                                                    })
-                                                }
-                                            })
-                                        }
-                                    )
-                                })
+                                                // Checks that Priority field is the same as updated
+                                                cy.get('tr td:nth-child(2)').eq(index).next().then(function (value) {
+                                                    const priorityText = value.text()
+                                                    expect(priorityText).to.equal(randomPriorityToUpdate)
+                                                })
+                                            }
+                                        })
+                                    }
+                                );
                             }
                         )
                     }

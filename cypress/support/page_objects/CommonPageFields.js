@@ -19,6 +19,10 @@ class CommonPageFields {
     getCreateButton() {
         return cy.get('.btn');
     }
+
+    getActionButton(name) {
+        return cy.get('.btn').contains(name);
+    }
 }
 
 export default CommonPageFields;

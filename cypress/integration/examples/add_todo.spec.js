@@ -1,6 +1,8 @@
 /// <reference types="Cypress" />
 import CommonPageFields from '../../support/page_objects/CommonPageFields'
 
+const createButton = 'Create Todo';
+
 describe('ADD TODO SCENARIOS', function () {
 
     it('Scenario 1: Adding a todo by selecting all fields is successful: Validate that description, responsible, \
@@ -13,14 +15,10 @@ describe('ADD TODO SCENARIOS', function () {
         const priorityTypes = ['Low', 'Medium', 'High'];
         const randomPriority = priorityTypes[Math.floor(Math.random() * priorityTypes.length)];
 
-        cy.visit('http://localhost:3000')
-        cy.contains('Create Todo').click();
+        cy.navigateToAddTodoPage()
 
         // Enter values into the form fields and submit
-        addTodoPage.getDescriptionField().type(randomDescriptionText);
-        addTodoPage.getResponsibleField().type(randomResponsibleText);
-        addTodoPage.getPriorityLevelField(randomPriority).click()
-        addTodoPage.getCreateButton().click()
+        cy.fillTodoFormAndSubmit(randomDescriptionText, randomResponsibleText, randomPriority, createButton)
 
         /** Searches the list of table and validates that the entry i.e. Description, Responsible, and Priority
          in the form is the same as in table
@@ -55,12 +53,10 @@ describe('ADD TODO SCENARIOS', function () {
         // Generate random values to fill the Todo form
         const randomDescriptionText = "Description " + Math.random().toString(36).substring(2, 7)
 
-        cy.visit('http://localhost:3000')
-        cy.contains('Create Todo').click();
+        cy.navigateToAddTodoPage()
 
         // Enter values into only description field and submit
-        addTodoPage.getDescriptionField().type(randomDescriptionText);
-        addTodoPage.getCreateButton().click()
+        cy.fillTodoFormAndSubmit(randomDescriptionText, "", "", createButton)
 
         /** Searches the list of table and validates that the entry i.e. Description field created 
          * is present, while the corresponding Responsible and Priority fields are empty
@@ -95,12 +91,10 @@ describe('ADD TODO SCENARIOS', function () {
         // Generate random values to fill the Todo form
         const randomResponsibleText = "Responsible " + Math.random().toString(36).substring(2, 15)
 
-        cy.visit('http://localhost:3000')
-        cy.contains('Create Todo').click();
+        cy.navigateToAddTodoPage()
 
         // Enter values into only description field and submit
-        addTodoPage.getResponsibleField().type(randomResponsibleText);
-        addTodoPage.getCreateButton().click()
+        cy.fillTodoFormAndSubmit("", randomResponsibleText, "", createButton)
 
         /** Searches the list of table and validates that the entry i.e. Description field created 
          * is present, and then checks that corresponding Responsible and Priority fields are empty
