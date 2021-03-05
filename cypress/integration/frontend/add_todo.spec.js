@@ -3,6 +3,10 @@ import CommonPageFields from '../../support/page_objects/CommonPageFields'
 
 const createButton = 'Create Todo';
 
+function generateRandomText(prefix) {
+    return prefix + Math.random().toString(36).substring(2, 10)
+}
+
 describe('ADD TODO SCENARIOS', function () {
 
     it('Scenario 1: Adding a todo by selecting all fields is successful: Validate that description, responsible, \
@@ -10,8 +14,8 @@ describe('ADD TODO SCENARIOS', function () {
         const addTodoPage = new CommonPageFields()
 
         // Generate random values to fill the Todo form
-        const randomDescriptionText = "Description " + Math.random().toString(36).substring(2, 7)
-        const randomResponsibleText = "Responsible " + Math.random().toString(36).substring(2, 7)
+        const randomDescriptionText = generateRandomText('Description')
+        const randomResponsibleText = generateRandomText('Responsible')
         const priorityTypes = ['Low', 'Medium', 'High'];
         const randomPriority = priorityTypes[Math.floor(Math.random() * priorityTypes.length)];
 
@@ -51,7 +55,7 @@ describe('ADD TODO SCENARIOS', function () {
         const addTodoPage = new CommonPageFields()
 
         // Generate random values to fill the Todo form
-        const randomDescriptionText = "Description " + Math.random().toString(36).substring(2, 7)
+        const randomDescriptionText = generateRandomText('Description')
 
         cy.navigateToAddTodoPage()
 
@@ -89,7 +93,7 @@ describe('ADD TODO SCENARIOS', function () {
         const addTodoPage = new CommonPageFields()
 
         // Generate random values to fill the Todo form
-        const randomResponsibleText = "Responsible " + Math.random().toString(36).substring(2, 15)
+        const randomResponsibleText = generateRandomText('Responsible')
 
         cy.navigateToAddTodoPage()
 

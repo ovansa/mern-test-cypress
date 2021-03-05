@@ -4,14 +4,18 @@ import UpdateTodoPage from "../../support/page_objects/UpdateTodoPage";
 
 const createButton = 'Create Todo';
 
+function generateRandomText(prefix) {
+    return prefix + Math.random().toString(36).substring(2, 10)
+}
+
 describe('DELETE TODO SCENARIOS', function () {
     it('Scenario 1: A todo can be deleted successfully: Verify that the deleted todo \
     is not present in the todo list table', function () {
         const updateTodoPage = new UpdateTodoPage()
 
         // Generate random values to fill the Todo form
-        const randomDescriptionText = "Description " + Math.random().toString(36).substring(2, 7)
-        const randomResponsibleText = "Responsible " + Math.random().toString(36).substring(2, 7)
+        const randomDescriptionText = generateRandomText('Description')
+        const randomResponsibleText = generateRandomText('Responsible')
         const priorityTypes = ['Low', 'Medium', 'High'];
         const randomPriority = priorityTypes[Math.floor(Math.random() * priorityTypes.length)];
 
@@ -40,7 +44,7 @@ describe('DELETE TODO SCENARIOS', function () {
                             expect(priorityText).to.equal(randomPriority)
                         })
 
-                        // Click the edit link of todo 
+                        // Click the edit link of selected todo 
                         cy.get('tr td:nth-child(3)').eq(index).next().contains('Edit').click().then(function () {
 
                             // Delete the new todo

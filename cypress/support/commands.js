@@ -27,11 +27,13 @@ const commonPageFields = new CommonPageFields()
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
+// -- This will open the home page and navigate to create todo page --
 Cypress.Commands.add('navigateToAddTodoPage', () => {
     cy.visit(Cypress.env('todo_url'));
     cy.contains('Create Todo').click();
 })
 
+// -- This will fill the create todo form and submit --
 Cypress.Commands.add('fillTodoFormAndSubmit', (description, responsible, priority, btnName) => {
     if (description) {
         commonPageFields.getDescriptionField().type(description);
@@ -47,6 +49,7 @@ Cypress.Commands.add('fillTodoFormAndSubmit', (description, responsible, priorit
     }
 })
 
+// -- This clears the textfields in create/update todo form --
 Cypress.Commands.add('clearForm', () => {
     commonPageFields.getDescriptionField().clear();
     commonPageFields.getResponsibleField().clear()

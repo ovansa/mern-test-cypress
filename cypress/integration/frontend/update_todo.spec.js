@@ -5,14 +5,18 @@ import UpdateTodoPage from '../../support/page_objects/UpdateTodoPage'
 const updateButton = 'Update Todo';
 const createButton = 'Create Todo';
 
+function generateRandomText(prefix) {
+    return prefix + Math.random().toString(36).substring(2, 10)
+}
+
 describe('UPDATE TODO SCENARIOS', function () {
     it('Scenario 1: The details of the todo selected by clicking edit button is prefilled in todo update page: \
-    Verify that the prefilled Description, Responsible, and Priority is the same as that in the todo list table', function () {
+    Verify that the prefilled Description, Responsible, and Priority is the same as that selected from the todo list table', function () {
         const commonPageFields = new CommonPageFields()
 
         // Generate random values to fill the Todo form
-        const randomDescriptionText = "Description " + Math.random().toString(36).substring(2, 7)
-        const randomResponsibleText = "Responsible " + Math.random().toString(36).substring(2, 7)
+        const randomDescriptionText = generateRandomText('Description')
+        const randomResponsibleText = generateRandomText('Responsible')
         const priorityTypes = ['Low', 'Medium', 'High'];
         const randomPriority = priorityTypes[Math.floor(Math.random() * priorityTypes.length)];
 
@@ -72,8 +76,8 @@ describe('UPDATE TODO SCENARIOS', function () {
         const commonPageFields = new CommonPageFields()
 
         // Generate random values to fill the Todo form
-        const randomDescriptionText = "Description " + Math.random().toString(36).substring(2, 7)
-        const randomResponsibleText = "Responsible " + Math.random().toString(36).substring(2, 7)
+        const randomDescriptionText = generateRandomText('Description')
+        const randomResponsibleText = generateRandomText('Responsible')
         const priorityTypes = ['Low', 'Medium', 'High'];
         const randomPriority = priorityTypes[Math.floor(Math.random() * priorityTypes.length)];
 
@@ -141,10 +145,10 @@ describe('UPDATE TODO SCENARIOS', function () {
     is the same as the updated values', function () {
 
         // Generate random values to fill the Todo form
-        const randomDescriptionText = "Description " + Math.random().toString(36).substring(2, 7)
-        const randomResponsibleText = "Responsible " + Math.random().toString(36).substring(2, 7)
-        const randomDescriptionTextforUpdate = "Description " + Math.random().toString(36).substring(2, 7)
-        const randomResponsibleTextforUpdate = "Responsible " + Math.random().toString(36).substring(2, 7)
+        const randomDescriptionText = generateRandomText('Description')
+        const randomResponsibleText = generateRandomText('Responsible')
+        const randomDescriptionTextforUpdate = generateRandomText('Description')
+        const randomResponsibleTextforUpdate = generateRandomText('Responsible')
         const priorityTypes = ['Low', 'Medium', 'High'];
         const randomPriority = priorityTypes[Math.floor(Math.random() * priorityTypes.length)];
         const randomPriorityToUpdate = priorityTypes[Math.floor(Math.random() * priorityTypes.length)];
@@ -167,28 +171,28 @@ describe('UPDATE TODO SCENARIOS', function () {
                             function () {
                                 // Update the Description, Responsible, Priority fields; and Update form        
                                 cy.clearForm()
-                                cy.fillTodoFormAndSubmit(randomDescriptionTextforUpdate, randomResponsibleTextforUpdate, 
+                                cy.fillTodoFormAndSubmit(randomDescriptionTextforUpdate, randomResponsibleTextforUpdate,
                                     randomPriorityToUpdate, updateButton).then(
-                                    function () {
-                                        cy.get('tr td:nth-child(1)').each(($e1, index, $list) => {
-                                            const text = $e1.text()
-                                            if (text.includes(randomDescriptionTextforUpdate)) {
+                                        function () {
+                                            cy.get('tr td:nth-child(1)').each(($e1, index, $list) => {
+                                                const text = $e1.text()
+                                                if (text.includes(randomDescriptionTextforUpdate)) {
 
-                                                // Checks that Responsible field is the same as updated
-                                                cy.get('tr td:nth-child(1)').eq(index).next().then(function (value) {
-                                                    const responsible = value.text()
-                                                    expect(responsible).to.equal(randomResponsibleTextforUpdate)
-                                                })
+                                                    // Checks that Responsible field is the same as updated
+                                                    cy.get('tr td:nth-child(1)').eq(index).next().then(function (value) {
+                                                        const responsible = value.text()
+                                                        expect(responsible).to.equal(randomResponsibleTextforUpdate)
+                                                    })
 
-                                                // Checks that Priority field is the same as updated
-                                                cy.get('tr td:nth-child(2)').eq(index).next().then(function (value) {
-                                                    const priorityText = value.text()
-                                                    expect(priorityText).to.equal(randomPriorityToUpdate)
-                                                })
-                                            }
-                                        })
-                                    }
-                                );
+                                                    // Checks that Priority field is the same as updated
+                                                    cy.get('tr td:nth-child(2)').eq(index).next().then(function (value) {
+                                                        const priorityText = value.text()
+                                                        expect(priorityText).to.equal(randomPriorityToUpdate)
+                                                    })
+                                                }
+                                            })
+                                        }
+                                    );
                             }
                         )
                     }
